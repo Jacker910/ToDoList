@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--To do List-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ToDoList" customModuleProvider="target" sceneMemberID="viewController">
@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="117-Vr-A2N">
-                                <rect key="frame" x="0.0" y="140" width="414" height="722"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="dVp-Qu-Ucf"/>
@@ -34,7 +34,7 @@
                             <constraint firstItem="117-Vr-A2N" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="x0Z-bM-VTz"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="2Lp-ZN-E8g">
+                    <navigationItem key="navigationItem" title="To do List" id="2Lp-ZN-E8g">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="A8c-Mt-jzM">
                             <connections>
                                 <action selector="addName:" destination="BYZ-38-t0r" id="uFw-Pq-Sla"/>
@@ -54,8 +54,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ERF-oL-S9u" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="jst-Bf-RHp">
-                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jst-Bf-RHp">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

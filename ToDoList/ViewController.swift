@@ -1,38 +1,22 @@
-
-
 import UIKit
 import CoreData
 
 class ViewController: UIViewController {
-
+    //MARK: -  Properties
     @IBOutlet weak var tableView: UITableView!
-    
     var tasks : [NSManagedObject] = []
     
-    
+    //MARK: - VC LC
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-    title = "To do List"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Task")
-        
-        do {
-            tasks = try managedContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("can't read \(error), \(error.userInfo)")
-        }
-        
+        lookingSaveData()
     }
-
+    
+    //MARK: - Actions and methods
     @IBAction func addName(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Новая задача", message: "Добавьте задачу", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Сохранить", style: .default) { [unowned self] action in
@@ -48,6 +32,20 @@ class ViewController: UIViewController {
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
     }
+    
+    func lookingSaveData() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Task")
+        do {
+            tasks = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("can't read \(error), \(error.userInfo)")
+        }
+    }
+    
     func save(title: String){
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
@@ -55,19 +53,14 @@ class ViewController: UIViewController {
         let managedContext = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "Task", in: managedContext)!
         let task = NSManagedObject(entity: entity, insertInto: managedContext)
-        
         task.setValue(title, forKey: "title")
-        
-        do{
+        do {
             try managedContext.save()
             tasks.append(task)
         } catch let error as NSError {
             print("can't save \(error), \(error.userInfo)")
         }
     }
-    
-    
-    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
@@ -82,18 +75,14 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         return cell
     }
     
-   //сделать кнопку удаления и удалить из базы
-    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, complete in
-            
-          
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
                 return
             }
             let managedContext = appDelegate.persistentContainer.viewContext
             managedContext.delete(self.tasks[indexPath.row])
-            do{
+            do {
                 try managedContext.save()
                 self.tasks.remove(at: indexPath.row)
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -102,16 +91,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
             }
             tableView.reloadData()
             complete(true)
-            
-                }
-                
-                deleteAction.backgroundColor = .red
-                
-                let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
-                configuration.performsFirstActionWithFullSwipe = true
-                return configuration
-        
+        }
+        deleteAction.backgroundColor = .red
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        configuration.performsFirstActionWithFullSwipe = true
+        return configuration
     }
-    }
-
-
+}
