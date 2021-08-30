@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     }
     
     //MARK: - Actions and methods
-    @IBAction func addName(_ sender: UIBarButtonItem) {
+    @IBAction func addTask(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Новая задача", message: "Добавьте задачу", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Сохранить", style: .default) { [unowned self] action in
             guard let textField = alert.textFields?.first, let taskToSave = textField.text else {
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func save(title: String){
+    func save(title: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
@@ -63,7 +63,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource{
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tasks.count
     }
@@ -76,19 +76,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, complete in
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            let managedContext = appDelegate.persistentContainer.viewContext
-            managedContext.delete(self.tasks[indexPath.row])
-            do {
-                try managedContext.save()
-                self.tasks.remove(at: indexPath.row)
-                self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            } catch let error as NSError {
-                print("can't save \(error), \(error.userInfo)")
-            }
+        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") { _, _, complete in
+            self.deleteTask(indexPath: indexPath)
             tableView.reloadData()
             complete(true)
         }
@@ -97,4 +86,23 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         configuration.performsFirstActionWithFullSwipe = true
         return configuration
     }
+    
+    func deleteTask(indexPath: IndexPath){
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        managedContext.delete(self.tasks[indexPath.row])
+        do {
+            print(indexPath.row)
+            print(indexPath.section)
+            try managedContext.save()
+            self.tasks.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        } catch let error as NSError {
+            print("can't save \(error), \(error.userInfo)")
+        }
+    }
+
 }
+
